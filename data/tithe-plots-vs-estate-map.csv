@@ -1,0 +1,64 @@
+tithe_plot,plot_number_inside_estate_map_boundary,share_of_traced_plot_inside,trace_quality,field_name,land_use,area_as_entered,landowner_as_entered,occupier_as_entered
+193,yes,1.0,clean,,Pasture,1A 2R 10P,Bute the Marquess of,Rees Thomas
+196,yes,0.35,clean,Cottage & garden,Arable,38P,Evans the Revd James (Glebe),Williams John
+198,yes,0.69,clean,,Garden,25P,Bute the Marquess of,Williams Edmund
+204,yes,0.44,clean,Old land,Waste,1A 2R 4P,Bute the Marquess of,Evans Revd James
+205,yes,0.53,clean,Cottage & garden,Arable,30P,Homfray John,Jenkins William
+206,yes,0.39,clean,Cottage & garden,Meadow,37P,Bute the Marquess of,David Thomas
+207,yes,0.99,clean,Cottage & garden,Garden,2R 30P,Bute the Marquess of,Sprackett John
+209,yes,0.73,clean,Courtyard &c,Arable,3R 13P,Bute the Marquess of,Williams John
+210,yes,0.89,"leaky trace, share unreliable",,Pasture,1R 6P,Homfray John,Jenkins William
+211,yes,1.0,clean,,Orchard,1A 3R 19P,Bute the Marquess of,Williams John
+215,yes,1.0,clean,,Meadow,5A 2R 39P,Bute the Marquess of,Williams John
+216,yes,0.98,clean,,Meadow,7A 3R 10P,Bute the Marquess of,Williams John
+217,yes,0.48,"leaky trace, share unreliable",,Meadow,1A 3R 38P,Bute the Marquess of,Williams John
+218,yes,1.0,clean,,Meadow,3A 23P,Bute the Marquess of,Williams John
+219,yes,1.0,clean,,Wood,1A 3R 38P,Bute the Marquess of,Williams John
+220,yes,1.0,clean,,Pasture,4A 2R 5P,Bute the Marquess of,Williams John
+221,yes,0.99,clean,,Arable,3A 19P,Bute the Marquess of,Williams John
+222,yes,1.0,clean,,Arable,2R 34P,Bute the Marquess of,Williams John
+223,yes,0.98,clean,,Arable,8A 30P,Bute the Marquess of,Williams John
+225,yes,0.71,clean,Cottage & garden,Garden,1R 24P,Bute the Marquess of,Roberts Evan
+245,yes,0.99,clean,,Arable,4A 37P,Bute the Marquess of,Williams John
+246,yes,1.0,clean,,Arable,4A 1R 36P,Bute the Marquess of,Williams John
+250a,yes,1.0,clean,,Arable,1A 2R 25P,Bute the Marquess of,Williams James
+252,yes,0.97,clean,,Arable,3A 6P,Bute the Marquess of,Williams John
+255,yes,1.0,clean,,Arable,1A 2R 28P,Bute the Marquess of,Williams John
+256,yes,0.98,clean,,Arable,3A 1R 23P,Bute the Marquess of,Williams John
+257,yes,1.0,clean,,Arable,3A 1R 9P,Bute the Marquess of,Williams John
+258,yes,1.0,clean,,Pasture,2R 9P,Bute the Marquess of,Williams John
+259,yes,0.99,clean,,Arable,1A 21P,Bute the Marquess of,Williams John
+260,yes,0.98,clean,,Pasture,6A 2R 10P,Bute the Marquess of,Williams John
+261,yes,1.0,clean,,Pasture,2A 2R 19P,Bute the Marquess of,Williams John
+262,yes,1.0,"leaky trace, share unreliable",,Meadow,1R 10P,Bute the Marquess of,Williams John
+263,yes,1.0,clean,,Meadow,8A 34P,Bute the Marquess of,Williams John
+264,yes,1.0,clean,,Arable,2A 2R 26P,Bute the Marquess of,Williams John
+265,yes,1.0,clean,,Pasture,1A 2R,Bute the Marquess of,Williams John
+266,yes,0.83,clean,,Wood,16A 33P,Bute the Marquess of,Williams John
+267,yes,1.0,clean,,Arable,4A 1R 25P,Bute the Marquess of,Williams John
+268,yes,1.0,clean,,Arable,2A 2R 10P,Bute the Marquess of,Evans Revd James
+269,yes,1.0,clean,,Pasture,1A,Bute the Marquess of,Evans Revd James
+270,yes,0.95,clean,,Meadow,4A 2R 1P,Bute the Marquess of,Evans Revd James
+271,yes,1.0,clean,Parsonage,Meadow,1A 2R,Evans the Revd James (Glebe),Evans the Revd James (Glebe)
+272,yes,1.0,clean,,Arable,5A 2R 25P,Bute the Marquess of,Evans Revd James
+273,yes,0.75,clean,,Wood,1A 32P,Bute the Marquess of,Evans Revd James
+274,yes,1.0,clean,,Meadow,32A 14P,Taff Vale Railway,Morgan Mary
+275,yes,1.0,clean,,Arable,3R 16P,Bute the Marquess of,Williams John
+288,yes,0.84,"leaky trace, share unreliable",Salt marsh,Pasture,3R 8P,Bute the Marquess of,Jenkins Lewis
+186,no,0.1,"leaky trace, share unreliable",Cottage & garden,,1R,Bute the Marquess of,Evans Evans
+192,no,0.32,clean,,Pasture,1A 1R 11P,Bute the Marquess of,Rees Thomas
+194,no,0.47,clean,Cottage & garden,Arable,2R 18P,Bute the Marquess of,Thomas Robert
+197,no,0.24,clean,Churchyard,Arable,2R 25P,Evans the Revd James (Glebe),Evans the Revd James (Glebe)
+200,no,0.19,clean,Cottage & garden,,35P,Bute the Marquess of,Bute the Marquess of
+212,no,0.09,clean,,Meadow,6A 1R 15P,Bute the Marquess of,Rees Thomas
+214a,no,0.06,clean,,Meadow,25A 1R 21P,Bute the Marquess of,Rees Thomas
+224,no,0.21,"leaky trace, share unreliable",,Garden,2R,Bute the Marquess of,Roberts Eliza
+235,no,0.34,"leaky trace, share unreliable",,Arable,3A 2R 26P,Clive the Hon R H,Morgan David
+244,no,0.11,clean,,Arable,4A 2R 12P,Bute the Marquess of,Rees Thomas
+249,no,0.19,clean,,Arable,2A 20P,Homfray John,Jenkins William
+253,no,0.09,clean,,Arable,2A 2R 6P,Homfray John,Jenkins William
+254,no,0.7,clean,,Arable,3R 4P,Homfray John,Jenkins William
+276,no,0.28,clean,,Rough pasture,1A 15P,Bute the Marquess of,Williams John
+277,no,0.21,clean,,Arable,3R 1P,Bute the Marquess of,Williams John
+279,no,0.07,clean,,Arable,5A 2R 11P,Bute the Marquess of,Williams John
+280a,no,0.08,"leaky trace, share unreliable",,Waste,14P,Hollier Henry,Hollier Henry

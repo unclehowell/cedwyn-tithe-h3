@@ -1,0 +1,56 @@
+<!doctype html><html lang="en" data-cw-noclip><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Tithe H3 · the Stewart plan parcels on a modern map · Cedwyn</title><meta name="description" content="The parcels of the David Stewart estate plan of Cedfin alias Ty Mawr, traced through the 1841 tithe map of Landough, Cogan and Leckwith onto a modern map, with grid references and H3 hexagons."><meta name="color-scheme" content="light"><meta name="theme-color" content="#1e4d45"><link rel="stylesheet" href="vendor/leaflet.css?v=1.9.4"><link rel="stylesheet" href="tithe-h3.css?v=0.6.0"><script src="/_cedwyn/parcel-modal.js?v=0.1.0" defer></script><script src="/_cedwyn/ghf/ghf-boot.js?v=2.1.8"></script></head><body class="th3"><main class="th3w" data-scope="wales online">
+<header class="th3-hero"><h1>Tithe H3</h1></header>
+<div class="th3-mapwrap">
+<details class="th3-ctl" id="th3ctl"><summary>Layers</summary>
+<div class="th3-bar" role="group" aria-label="Map layers">
+<label class="tl"><input type="checkbox" id="l-tl" checked> Highlight parcels</label>
+<label class="lr"><input type="checkbox" id="l-lr"> Highlight parcels — later Land Registry</label>
+<label><input type="checkbox" id="l-tithe" checked> 1841 tithe map</label>
+<label><input type="checkbox" id="l-stew"> Stewart plan</label>
+<label><input type="checkbox" id="l-os"> OS c.1900</label>
+<label><input type="checkbox" id="l-tr"> Traced outlines (as drawn)</label>
+<label class="op">Opacity <input type="range" id="l-op" min="0" max="100" value="55" aria-label="Old map opacity"></label>
+</div>
+<div class="th3-bar" role="group" aria-label="Pins">
+<span class="lab">Pins</span>
+<label><input type="checkbox" id="l-pb" checked> <i class="th3-pin" style="--c:#1f4fbf"></i> Bute</label>
+<label><input type="checkbox" id="l-pw" checked> <i class="th3-pin" style="--c:#8e24aa"></i> Williams</label>
+<label><input type="checkbox" id="l-po" checked> <i class="th3-pin" style="--c:#6d6d6d"></i> Other</label>
+<label><input type="checkbox" id="l-pr"> <i class="th3-dia"></i> Dated records</label>
+</div>
+<div class="th3-bar" role="group" aria-label="H3 resolution">
+<label class="lab" for="l-res">Hexagons</label>
+<select id="l-res" aria-describedby="h3stat"><option value="0">off</option><option value="12" selected>res 12 · about 307 m²</option><option value="13">res 13 · about 44 m²</option><option value="14">res 14 · about 6.3 m²</option><option value="15">res 15 · about 0.9 m²</option></select>
+<label><input type="checkbox" id="l-lock"> Lock resolution</label>
+<span class="hint">Unlocked, the resolution follows the zoom: 12 when zoomed out, up to 15 when zoomed right in.</span>
+</div>
+</details>
+<span class="th3-stat" id="h3stat" aria-live="polite"></span>
+<div id="map" aria-label="Map of the parcels"></div>
+</div>
+<div class="th3-legend" id="legend"></div>
+<p class="th3-est">Boundaries between parcels are estimated: a reconstruction from the traced outlines, not surveyed lines.</p>
+<section class="th3-panel" id="panel" aria-live="polite"><p class="hint">Tap a parcel for its details.</p></section>
+<div class="th3-intro"><p>The parcels of the David Stewart estate plan, traced through the 1841 tithe map onto today’s map, with an OS grid reference and H3 hexagons for each.</p></div>
+
+<h2>The parcels</h2>
+<div class="th3-tablewrap"><table class="th3-table" id="tbl"><thead><tr><th>Highlight</th><th>Plan no.</th><th>1841 plot</th><th>Occupier (1841, as entered)</th><th>Grid ref</th><th>H3 res 8</th></tr></thead><tbody></tbody></table></div>
+<p class="th3-dl">Data: <a href="data/stewart-parcels.csv" download>parcels CSV</a> · <a href="data/stewart-parcels.geojson" download>GeoJSON</a> · <a href="data/tithe-plots-vs-estate-map.csv" download>1841 plots inside the plan boundary (CSV)</a> · <a href="data/parcels-est.json" download>estimated parcel shapes (JSON)</a> · <a href="data/pins.json" download>pins and dated records (JSON)</a></p>
+
+<h2>How it was made</h2>
+<ol class="th3-how">
+<li><b>The plan.</b> The David Stewart survey of the Bute Glamorgan estates, plan of Cedfin alias Ty Mawr (the library dates the survey c.1822–24). Its parcel numbers were read by eye from a phone image. The figures run 1 to 45; the ones that look like 50–59 are written with an old-style 3, so we read them as 30–39. Numbers 1–4 in the homestead group and number 18 could not be read; those parcels are shown as “not read”.</li>
+<li><b>The 1841 tithe map.</b> <i>Plan of the parishes of Landough, Cogan and Leckwith</i>, Edward Edmunds, 1841, scale 8 chains to an inch (National Library of Wales). Its plot outlines were traced from the plot-number positions in the library’s apportionment index. Where a plan parcel and a tithe plot are the same field, the clearer tithe outline is used; otherwise the plan’s own outline.</li>
+<li><b>Onto today’s map.</b> The tithe map was first fitted to the georeferenced OS six-inch map of c.1900 (version 0.1). In version 0.2 the whole layer, parcels and old-map overlays together, was re-aligned to today’s ground with a correction fitted to seven control points on OpenStreetMap: St Dochdwy’s church, the mouth of the Cwm Cydfin stream at the Ely, the north tip of the Ely meander round plot 216, the Ely’s north-west bend and first bend, the curve of the Cwm Cydfin stream, and a field boundary on Penlan Road. Before, those points sat about 86 m off (the layer was shifted north-west, turned about 5° and drawn about 13% too small); after, the error is about 7 m (RMS). The plan was fitted to the tithe map field by field (about 13 m RMS).</li>
+<li><b>H3.</b> Pick a resolution: 8 (the Bloculus resolution, about 0.74 km² a cell; the cell holding each parcel’s centre), or 10 to 15, from about 1.5 ha down to about 0.9 m² a cell. Resolution 15 is the finest the H3 grid has. From 10 up, the hexagons are worked out in your browser for the part of the map in view: a cell is drawn when its centre falls inside a parcel, in that parcel’s colour. Resolutions 14 and 15 draw once you zoom in close (a parcel at res 15 holds tens of thousands of cells), and at most about 20,000 cells are drawn at once.</li>
+</ol>
+<p class="th3-note"><b>Traffic light (v0.3.0).</b> Family-associated land, as a working classification, not a legal finding. Green, Parcel A: plan parcels over 1841 tithe plots 209, 211, 219 and 220 (house and yard, orchard, wood strip, field), a working match not yet checked against a dated plan of Parcel A. Amber, Parcel B: plan parcels 5 and 6, over 1841 tithe plot 193, a match not checked. Amber, Leckwith Common and the playing fields: land in the City of Cardiff (Leckwith Common) Compulsory Purchase Order 1957, confirmed 1958; its extent is not yet located, so a pin marks today’s Leckwith Moors park as a guide. Amber, Parcel C: no boundary is held, so it is not drawn. Red: every other parcel on the estate plan.</p>
+<p class="th3-note">Owner and occupier columns are the 1841 apportionment exactly as entered. Which plan parcel matches which tithe plot is our reading. With the re-alignment the traced parcels add up to about 140 acres, against 139a 3r 8p on the plan; before it they came to 105 acres, because the layer was drawn too small. The river course has moved a little since 1841, so the Ely itself can sit a few metres off the old banks.</p>
+
+<footer class="th3-foot"><p>Tithe H3 · webapp 42 of 59 · v0.5.0 <button type="button" class="th3-info" data-th3-info aria-haspopup="dialog" aria-controls="changelog" title="Changelog">ⓘ</button> · <a href="#changelog" data-th3-info>Changelog</a></p>
+<dialog id="changelog" class="th3-modal" aria-label="Changelog"><div class="th3-mhead"><b>Tithe H3 changelog</b><button type="button" class="th3-x" data-th3-close aria-label="Close">×</button></div><div class="th3-mbody"><table class="th3-ctable"><thead><tr><th>Version</th><th>Date</th><th>What changed</th></tr></thead><tbody><tr><td>v0.6.0</td><td>5 Nov 2026</td><td>The OS c.1900 map stays on at every zoom. Hexagons follow the zoom (resolution 12 when zoomed out, up to 15 when zoomed in), with a lock to hold one resolution. “Traffic light” is renamed “Highlight parcels”. Parcel shapes are now a gap-free, non-overlapping reconstruction of the estate: boundaries between parcels are estimated from the traced outlines (the outlines as drawn stay available as a layer). A separate “Highlight parcels — later Land Registry” layer is added, empty until registry plans are held. Pins: Bute, Williams and Other, one per parcel from the 1841 apportionment, plus diamond markers for dated records. The cell count moves clear of the credits bar on a phone.</td></tr><tr><td>v0.5.0</td><td>4 Nov 2026</td><td>The map comes first on a phone: the title is one line, the introduction sits under the map, and the layer and hexagon controls fold into a “Layers” button on the map, closed by default. The cell count sits in the map’s corner, and the hexagon size is shown once, in the picker.</td></tr><tr><td>v0.4.0</td><td>3 Nov 2026</td><td>H3 resolution picker: 8, 10, 11, 12 (the default), 13, 14 and 15, the finest the H3 grid has (about 0.9 m² a cell). From 10 up the hexagons are worked out in the browser for the area in view, each in the traffic-light colour of the parcel its centre falls in. Resolutions 14 and 15 draw when zoomed in close, up to about 20,000 cells at once, with a “Zoom in to see res N” prompt otherwise. The map zooms two steps further in.</td></tr><tr><td>v0.3.0</td><td>3 Nov 2026</td><td>Traffic-light layer (on by default, switch in the layer bar): red for the parcels of the c.1824 estate plan, amber for land with a possible link not established (Parcel B; Leckwith Common and the playing fields, shown as a guide pin; Parcel C, not drawn), green for Parcel A. A working classification of family-associated land, not a legal finding. The table gains a Light column.</td></tr><tr><td>v0.2.0</td><td>2 Nov 2026</td><td>Re-aligned to the River Ely, the Cwm Cydfin stream and St Dochdwy’s church on today’s map: parcels, both old-map overlays, grid references and H3 cells moved together (about 86 m out before, about 7 m after). Traced areas now match the plan’s total. Changelog opens from the ⓘ button.</td></tr><tr><td>v0.1.2</td><td>2 Nov 2026</td><td>The page shows at /tithe-h3/ as well as /wales/tithe-h3/, and the header reads “Tithe H3 · 42 of 59” on both.</td></tr><tr><td>v0.1.1</td><td>2 Nov 2026</td><td>The “42 of 59” number sits in the header’s own numbering slot; the e-book strip under the header is removed from this webapp.</td></tr><tr><td>v0.1.0</td><td>2 Nov 2026</td><td>First version. The plan’s parcels traced through the 1841 tithe map, fitted to the OS map, with grid references and H3 cells.</td></tr></tbody></table></div></dialog></footer>
+</main>
+<script src="vendor/leaflet.js?v=1.9.4"></script>
+<script src="vendor/h3-js.umd.js?v=4.5.0" defer></script>
+<script src="tithe-h3.js?v=0.6.0" defer></script>
+</body></html>

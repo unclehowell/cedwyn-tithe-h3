@@ -1,0 +1,87 @@
+.th3{margin:0;background:#f7f2e7;color:#1d1d1b;font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+.th3w{max-width:960px;margin:0 auto;padding:12px 14px 40px}
+.th3-parcel{margin:4px 0 0;font-size:.85rem}.th3-parcel a{color:#1e4d45}
+.th3-hero h1{margin:.2em 0 .1em;font-size:1.7rem;color:#1e4d45}.th3-hero p{margin:0 0 .8em}
+.th3-bar{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;margin:6px 0;font-size:.9rem}
+.th3-bar label{display:flex;gap:4px;align-items:center;white-space:nowrap}
+.th3-bar .op input{width:110px}.th3-bar .lab{font-weight:600}
+.th3-bar button{font:inherit;padding:4px 10px;border:1px solid #1e4d45;background:#fff;color:#1e4d45;border-radius:14px;cursor:pointer}
+.th3-bar button[aria-pressed=true]{background:#1e4d45;color:#fff}
+#map{height:68vh;min-height:360px;border-radius:8px;border:1px solid #c9bfa8;background:#ddd}
+.th3-legend{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:.82rem;margin:6px 0}
+.th3-legend span{display:inline-flex;align-items:center;gap:5px}.th3-legend i{width:14px;height:14px;border-radius:3px;display:inline-block;border:1px solid #0003}
+.th3-panel{background:#fff;border:1px solid #d8cfba;border-radius:8px;padding:10px 12px;margin:8px 0}
+.th3-panel h3{margin:0 0 4px;color:#1e4d45}.th3-panel dl{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;margin:0;font-size:.9rem}
+.th3-panel dt{font-weight:600}.th3-panel dd{margin:0;overflow-wrap:anywhere}.th3-panel .hint{margin:0;color:#666}
+.th3-panel code{font-size:.82rem}
+.th3-tablewrap{overflow-x:auto}.th3-table{border-collapse:collapse;width:100%;font-size:.85rem}
+.th3-table th,.th3-table td{border-bottom:1px solid #e3dccb;padding:4px 6px;text-align:left;white-space:nowrap}
+.th3-table tr{cursor:pointer}.th3-table tr:hover{background:#efe8d6}
+.th3-how li{margin:.3em 0}.th3-note{font-size:.9rem;color:#444}
+.th3-dl{font-size:.9rem}.th3-dl a,.th3-foot a{color:#1e4d45}
+.th3-foot{margin-top:24px;font-size:.85rem;color:#555}
+.th3-lbl{background:none;border:0;box-shadow:none;font:700 11px system-ui;color:#111;text-shadow:0 0 2px #fff,0 0 2px #fff,0 0 3px #fff;padding:0}
+.th3-lbl:before{display:none}
+@media (max-width:420px){.th3-hero h1{font-size:1.45rem}#map{height:62vh}}
+
+/* v0.1.1: the header's third row shows nothing but the shared Garden banner on this webapp (the e-book strip is gone) */
+.ghf-v2-up:not(.cw-gdn-on){display:none!important}
+.ghf-v2-name small[data-th3-slot] a:hover{text-decoration:underline!important}
+
+/* v0.2.0: (i) changelog modal */
+.th3-info{font:inherit;line-height:1;border:1px solid #1e4d45;color:#1e4d45;background:#fff;border-radius:50%;width:22px;height:22px;padding:0;cursor:pointer;vertical-align:middle}
+.th3-modal{border:0;border-radius:10px;padding:0;max-width:min(560px,94vw);width:94vw;box-shadow:0 8px 30px rgba(0,0,0,.35)}
+.th3-modal::backdrop{background:rgba(0,0,0,.45)}
+.th3-mhead{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:#1e4d45;color:#fff}
+.th3-x{background:none;border:0;color:#fff;font-size:1.5rem;line-height:1;cursor:pointer}
+.th3-mbody{padding:8px 10px;max-height:70vh;overflow:auto}
+.th3-ctable{border-collapse:collapse;width:100%;font-size:.85rem}
+.th3-ctable th,.th3-ctable td{border-bottom:1px solid #e3dccb;padding:5px 6px;text-align:left;vertical-align:top}
+.th3-ctable td:first-child,.th3-ctable td:nth-child(2){white-space:nowrap}
+
+/* v0.3.0: traffic-light layer */
+.th3-bar label.tl{font-weight:600}
+.th3-legend .tl-head{flex-basis:100%;display:block}
+.th3-sw{display:inline-block;width:11px;height:11px;border-radius:2px;border:1px solid #0003;margin-right:4px;vertical-align:-1px}
+@media (max-width:420px){.th3-legend span{align-items:flex-start}.th3-legend i{flex:0 0 14px;margin-top:2px}}
+
+/* v0.4.0: H3 resolution picker and the zoom-in prompt */
+.th3-bar select{font:inherit;padding:4px 8px;border:1px solid #1e4d45;border-radius:14px;background:#fff;color:#1e4d45;max-width:100%}
+.th3-stat{font-size:.82rem;color:#555}
+.th3-zhint{background:#fff;border:1px solid #1e4d45;border-radius:8px;padding:5px 8px;font-size:.85rem;color:#1e4d45;box-shadow:0 1px 4px #0003;max-width:200px}
+.th3-zhint[hidden]{display:none}
+.th3-zhint button{font:inherit;margin-left:4px;padding:2px 8px;border:1px solid #1e4d45;border-radius:12px;background:#1e4d45;color:#fff;cursor:pointer}
+@media (max-width:420px){.th3-stat{flex-basis:100%}}
+
+/* v0.5.0: map first on a phone. Title is one line (the site header already names the page), the introduction sits under the map,
+   the controls fold into a "Layers" button on the map, closed by default, and the cell count sits in the map's corner. */
+.th3-hero{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.th3w{padding-top:6px}
+.th3-mapwrap{position:relative}
+.th3-ctl{background:#fff;border:1px solid #1e4d45;border-radius:8px;box-shadow:0 1px 4px #0003;font-size:.85rem;max-width:min(300px,78vw)}
+.th3-ctl>summary{cursor:pointer;list-style:none;padding:5px 10px;font-weight:600;color:#1e4d45;user-select:none}
+.th3-ctl>summary::-webkit-details-marker{display:none}
+.th3-ctl>summary:after{content:" ▾"}.th3-ctl[open]>summary:after{content:" ▴"}
+.th3-ctl .th3-bar{margin:0;padding:4px 10px 8px;flex-direction:column;align-items:flex-start;gap:6px}
+.th3-ctl .th3-bar+.th3-bar{border-top:1px solid #e3dccb;padding-top:8px}
+.th3-ctl .th3-bar .op input{width:120px}
+.leaflet-control .th3-stat{display:block;background:rgba(255,255,255,.85);border-radius:4px;padding:1px 6px;font-size:.75rem;color:#333;margin:0 0 4px 4px}
+.th3-stat:empty{display:none!important}
+.th3-intro{font-size:.9rem;color:#444;margin:0 0 .6em}.th3-intro p{margin:0}
+#map{height:72vh}
+@media (max-width:420px){#map{height:70vh}.th3-stat{flex-basis:auto}}
+
+/* v0.6.0: pins key (Bute / Williams / Other), dated-record diamonds, estimated-boundary note, cell count in the top-left corner
+   (clear of the credits bar on a phone). */
+.th3-pin{display:inline-block;width:10px;height:10px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:var(--c);vertical-align:-1px;border:1px solid #fff;box-shadow:0 0 0 1px var(--c)}
+.th3-dia{display:inline-block;width:9px;height:9px;transform:rotate(45deg);background:#444;vertical-align:0;border:1px solid #fff;box-shadow:0 0 0 1px #444}
+.th3-pinm,.th3-diam{background:none;border:0}
+.th3-pinm svg{filter:drop-shadow(0 1px 1px #0006)}
+.th3-diam span{display:flex;align-items:center;justify-content:center;width:20px;height:20px;margin:3px;transform:rotate(45deg);background:var(--c);border:2px solid #fff;box-shadow:0 1px 3px #0007}
+.th3-diam b{transform:rotate(-45deg);color:#fff;font:700 10px/1 system-ui,sans-serif}
+.th3-recs{margin:.4em 0 0;padding-left:1.1em;font-size:.8rem}.th3-recs li{margin:0 0 .35em}
+.th3-est{font-size:.8rem;color:#555;margin:.35em 0 .2em}
+.th3-ctl .th3-bar .lab{font-weight:600;color:#1e4d45}
+.th3-ctl .th3-bar .hint{font-size:.72rem;color:#666;max-width:240px}
+.th3-ctl label.lr{color:#00737f}
+.leaflet-top.leaflet-left .th3-stat.leaflet-control{display:block;margin:6px 0 0 10px;max-width:62vw;background:rgba(255,255,255,.9);border-radius:4px;padding:1px 6px;font-size:.75rem;color:#333;box-shadow:0 1px 3px #0003}

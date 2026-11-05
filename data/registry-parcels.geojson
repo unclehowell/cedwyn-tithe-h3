@@ -1,0 +1,6 @@
+{
+ "type": "FeatureCollection",
+ "name": "later Land Registry parcels (registry-redrawn)",
+ "note": "Empty in v0.6.0: no Land Registry title plan geometry is held yet. Titles named on this site: WA231076 (woodland), WA240304 (farmhouse), WA735527. Features added here draw on the map in the 'later Land Registry' layer; overlaps are allowed in this layer only.",
+ "features": []
+}
