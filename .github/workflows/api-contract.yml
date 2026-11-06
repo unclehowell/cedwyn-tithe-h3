@@ -33,5 +33,9 @@ jobs:
           node --check functions/index.js
           node --check functions/api/v1.js
           node --check functions/mcp.js
+      - name: Validate generated app-view contract
+        run: |
+          python3 -m py_compile tools/sync_central.py
+          python3 -c "import json; v=json.load(open('data/view.json')); assert v['schema']=='cedwyn.app-view/v1'; assert v['app']['id']=='tithe-h3'; assert v['catalogue']['count']==len(v['catalogue']['items']); assert len(v['map']['pins']['records'])>0"
       - name: Contract and security tests
         run: node --test test/api-contract.test.mjs
