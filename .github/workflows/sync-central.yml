@@ -6,6 +6,12 @@ name: sync-central
 on:
   schedule:
     - cron: '20 */6 * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'data/pins.json'
+      - 'tools/sync_central.py'
+      - '.github/workflows/sync-central.yml'
   workflow_dispatch:
 permissions:
   contents: write
