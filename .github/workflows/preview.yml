@@ -32,6 +32,68 @@ jobs:
         run: |
           python3 -c "import json; v=json.load(open('data/view.json')); assert v['schema']=='cedwyn.app-view/v1'; assert v['app']['id']=='tithe-h3'; assert v['catalogue']['count']==len(v['catalogue']['items']); assert len(v['map']['pins']['records'])>0"
           node --test test/api-contract.test.mjs
+
+  preview-smoke:
+    needs: contract
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Wait for the Cloudflare Pages Git preview
+        env:
+          BRANCH: ${{ github.head_ref }}
+        run: |
+          set -euo pipefail
+          SLUG="$(printf '%s' "$BRANCH" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9-]/-/g' | cut -c1-28)"
+          URL="https://${SLUG}.cedwyn-tithe-h3.pages.dev"
+          echo "Testing $URL"
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent --show-error "$URL/data/view.json" -o /tmp/view.json; then
+              echo "PREVIEW_URL=$URL" >> "$GITHUB_ENV"
+              break
+            fi
+            if [ "$attempt" -eq 30 ]; then echo "Cloudflare Pages preview did not become reachable"; exit 1; fi
+            sleep 10
+          done
+      - name: Test app view and JSON/XML endpoints
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          v=json.load(open('/tmp/view.json'))
+          assert v['schema']=='cedwyn.app-view/v1'
+          assert v['app']['id']=='tithe-h3'
+          assert v['catalogue']['count']==len(v['catalogue']['items'])
+          assert len(v['map']['pins']['records'])>0
+          PY
+          curl --fail --silent --show-error -H 'Accept: application/json' "$PREVIEW_URL/api/v1" -o /tmp/api.json
+          curl --fail --silent --show-error -H 'Accept: application/xml' "$PREVIEW_URL/api/v1?format=xml" -o /tmp/api.xml
+          python3 - <<'PY'
+          import json
+          p=json.load(open('/tmp/api.json'))
+          assert p['dataset']['mode']=='app-view'
+          assert p['items'] and p['pagination']['total']>0
+          assert all(x['source']['type']=='central-catalogue' for x in p['items'])
+          assert 'PRIVATE_CANARY' not in open('/tmp/api.json').read()
+          assert '<cedwyn-api ' in open('/tmp/api.xml').read()
+          PY
+      - name: Test MCP resource read
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error "$PREVIEW_URL/mcp" \
+            -H 'content-type: application/json' \
+            -H 'mcp-protocol-version: 2025-11-25' \
+            --data '{"jsonrpc":"2.0","id":1,"method":"resources/read","params":{"uri":"cedwyn://tithe-h3/catalogue"}}' \
+            -o /tmp/mcp.json
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/mcp.json'))
+          assert r['result']['contents'][0]['uri']=='cedwyn://tithe-h3/catalogue'
+          p=json.loads(r['result']['contents'][0]['text'])
+          assert p['dataset']['mode']=='app-view'
+          assert p['items']
+          PY
+
   preview:
     needs: contract
     runs-on: ubuntu-latest
