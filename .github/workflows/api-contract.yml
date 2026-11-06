@@ -16,6 +16,9 @@ on:
       - 'functions/**'
       - 'test/api-contract.test.mjs'
       - 'docs/APP-API-PILOT.md'
+      - 'data/view.json'
+      - 'data/pins.json'
+      - 'tools/sync_central.py'
       - '.github/workflows/api-contract.yml'
 
 permissions:
