@@ -1,51 +1,8 @@
 const APP_ID = "tithe-h3";
-const API_VERSION = "0.1.0";
+const API_VERSION = "0.2.0";
 const RESOURCE_URI = "cedwyn://tithe-h3/catalogue";
 const MODERN_MCP_VERSION = "2026-07-28";
 const LEGACY_MCP_VERSION = "2025-11-25";
-
-// Synthetic fixtures only. The real app projection is data/central.json, but it is
-// a generated static JSON file, not a bound app-local database. Never serve it as
-// a live API until the app-local backend and access controls are implemented.
-const FIXTURE_ROWS = Object.freeze([
-  Object.freeze({
-    id: "urn:cedwyn:fixture:tithe-h3:record:0001",
-    kind: "fixture",
-    title: "Synthetic <public> & escaped catalogue entry — not a historical record",
-    date_display: "fixture only",
-    date_sort: "0000-00-00",
-    status: "FIXTURE",
-    page: null,
-    source: { type: "synthetic-fixture", repository: "unclehowell/cedwyn-tithe-h3", path: "functions/_shared/api.mjs" },
-    internal_note: "PRIVATE_CANARY_DO_NOT_RETURN_0001",
-    contact_email: "private-fixture@example.invalid"
-  }),
-  Object.freeze({
-    id: "urn:cedwyn:fixture:tithe-h3:record:0002",
-    kind: "fixture",
-    title: "Synthetic public catalogue entry 2 — not a historical record",
-    date_display: "fixture only",
-    date_sort: "0000-00-00",
-    status: "FIXTURE",
-    page: null,
-    source: { type: "synthetic-fixture", repository: "unclehowell/cedwyn-tithe-h3", path: "functions/_shared/api.mjs" },
-    internal_note: "PRIVATE_CANARY_DO_NOT_RETURN_0002",
-    contact_email: "private-fixture@example.invalid"
-  }),
-  Object.freeze({
-    id: "urn:cedwyn:fixture:tithe-h3:record:0003",
-    kind: "fixture",
-    title: "Synthetic public catalogue entry 3 — not a historical record",
-    date_display: "fixture only",
-    date_sort: "0000-00-00",
-    status: "FIXTURE",
-    page: null,
-    source: { type: "synthetic-fixture", repository: "unclehowell/cedwyn-tithe-h3", path: "functions/_shared/api.mjs" },
-    internal_note: "PRIVATE_CANARY_DO_NOT_RETURN_0003",
-    contact_email: "private-fixture@example.invalid"
-  })
-]);
-
 const PUBLIC_FIELDS = Object.freeze(["id", "kind", "title", "date_display", "date_sort", "status", "page", "source"]);
 const COMMON_HEADERS = Object.freeze({
   "x-cedwyn-app": APP_ID,
@@ -54,9 +11,26 @@ const COMMON_HEADERS = Object.freeze({
   "cache-control": "public, max-age=60, stale-while-revalidate=300"
 });
 
-function projectPublic(row) {
-  // Explicit allowlist: do not spread source records into an API response.
-  return Object.fromEntries(PUBLIC_FIELDS.map((field) => [field, row[field] ?? null]));
+export async function loadView(request) {
+  try {
+    const response = await fetch(new URL("/data/view.json", request.url), { headers: { accept: "application/json" } });
+    if (!response.ok) return null;
+    const view = await response.json();
+    if (view?.schema !== "cedwyn.app-view/v1" || view?.app?.id !== APP_ID || !view?.catalogue?.items || typeof view.catalogue.items !== "object") return null;
+    return view;
+  } catch {
+    return null;
+  }
+}
+
+function projectPublic(row, catalogueSource) {
+  // Explicit field allowlist: never spread a central source record into an API response.
+  return Object.fromEntries(PUBLIC_FIELDS.map((field) => [
+    field,
+    field === "source"
+      ? { type: "central-catalogue", url: catalogueSource + "/" + encodeURIComponent(row.id) }
+      : (row[field] ?? null)
+  ]));
 }
 
 function problem(status, title, detail, extra = {}) {
@@ -71,12 +45,19 @@ function xmlEscape(value) {
 }
 
 function asXml(payload) {
-  const items = payload.items.map((item) => `    <item>\n${PUBLIC_FIELDS.map((field) => {
-    const value = item[field];
-    if (field === "source") return `      <source type="${xmlEscape(value?.type || "")}"><repository>${xmlEscape(value?.repository || "")}</repository><path>${xmlEscape(value?.path || "")}</path></source>`;
-    return `      <${field}>${xmlEscape(value === null ? "" : value)}</${field}>`;
-  }).join("\n")}\n    </item>`).join("\n");
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<cedwyn-api schema="cedwyn.app-api/v1" app="${APP_ID}" version="${API_VERSION}">\n  <dataset id="${payload.dataset.id}" mode="${payload.dataset.mode}">${xmlEscape(payload.dataset.note)}</dataset>\n  <pagination limit="${payload.pagination.limit}" offset="${payload.pagination.offset}" total="${payload.pagination.total}" has_more="${payload.pagination.has_more}" />\n  <items>\n${items}\n  </items>\n</cedwyn-api>`;
+  const items = payload.items.map((item) => {
+    const fields = PUBLIC_FIELDS.map((field) => {
+      const value = item[field];
+      if (field === "source") return '      <source type="' + xmlEscape(value?.type || "") + '"><url>' + xmlEscape(value?.url || "") + '</url></source>';
+      return "      <" + field + ">" + xmlEscape(value === null ? "" : value) + "</" + field + ">";
+    }).join("\n");
+    return "    <item>\n" + fields + "\n    </item>";
+  }).join("\n");
+  return '<?xml version="1.0" encoding="UTF-8"?>\n<cedwyn-api schema="cedwyn.app-api/v1" app="' + APP_ID + '" version="' + API_VERSION + '">\n' +
+    '  <dataset id="' + xmlEscape(payload.dataset.id) + '" mode="' + xmlEscape(payload.dataset.mode) + '">' + xmlEscape(payload.dataset.note) + '</dataset>\n' +
+    '  <provenance source="' + xmlEscape(payload.provenance.catalogue_source) + '" synced_utc="' + xmlEscape(payload.provenance.synced_utc) + '" />\n' +
+    '  <pagination limit="' + payload.pagination.limit + '" offset="' + payload.pagination.offset + '" total="' + payload.pagination.total + '" has_more="' + payload.pagination.has_more + '" />\n' +
+    "  <items>\n" + items + "\n  </items>\n</cedwyn-api>";
 }
 
 function chooseFormat(request, defaultFormat) {
@@ -91,37 +72,52 @@ function chooseFormat(request, defaultFormat) {
   return "none";
 }
 
-function buildPayload(request) {
+function buildPayload(request, view) {
   const url = new URL(request.url);
   const allowedParams = new Set(["limit", "offset", "format"]);
   for (const key of url.searchParams.keys()) {
-    if (!allowedParams.has(key)) return { error: problem(400, "Unsupported query parameter", `The parameter '${key}' is not part of the public API contract.`) };
+    if (!allowedParams.has(key)) return { error: problem(400, "Unsupported query parameter", "The parameter '" + key + "' is not part of the public API contract.") };
   }
   const rawLimit = url.searchParams.get("limit"), rawOffset = url.searchParams.get("offset");
   const limit = rawLimit === null ? 20 : Number(rawLimit), offset = rawOffset === null ? 0 : Number(rawOffset);
   if (!Number.isSafeInteger(limit) || limit < 1 || limit > 50) return { error: problem(400, "Invalid limit", "limit must be an integer from 1 to 50.") };
   if (!Number.isSafeInteger(offset) || offset < 0 || offset > 10000) return { error: problem(400, "Invalid offset", "offset must be an integer from 0 to 10000.") };
-  const all = FIXTURE_ROWS.map(projectPublic), items = all.slice(offset, offset + limit);
+  const catalogue = view.catalogue;
+  const all = Object.values(catalogue.items).map((row) => projectPublic(row, catalogue.source));
+  all.sort((a, b) => String(a.date_sort || "").localeCompare(String(b.date_sort || "")) || String(a.id).localeCompare(String(b.id)));
+  const items = all.slice(offset, offset + limit);
   const nextOffset = offset + items.length < all.length ? offset + items.length : null;
-  const next = nextOffset === null ? null : `${url.origin}${url.pathname}?limit=${limit}&offset=${nextOffset}`;
+  const next = nextOffset === null ? null : url.origin + url.pathname + "?limit=" + limit + "&offset=" + nextOffset;
   return { payload: {
     schema: "cedwyn.app-api/v1", app: APP_ID, api_version: API_VERSION,
-    dataset: { id: "tithe-h3-fixture-catalogue", mode: "fixture-only", note: "Synthetic test data only. Not connected to data/central.json, a D1 database, or live evidence records." },
-    provenance: { repository: "unclehowell/cedwyn-tithe-h3", fixture_path: "functions/_shared/api.mjs", central_projection: "data/central.json exists but is not read by this fixture API", generated_at: null },
+    dataset: { id: "tithe-h3-app-view", mode: "app-view", note: "The app-local view combines map-owned data with the public central-catalogue fields used by Tithe H3." },
+    provenance: {
+      repository: "unclehowell/cedwyn-tithe-h3",
+      view_path: "data/view.json",
+      catalogue_source: catalogue.source,
+      synced_utc: catalogue.synced_utc,
+      public_catalogue_records: catalogue.count,
+      map_record_count: view.map?.pins?.records?.length || 0
+    },
     public_fields: PUBLIC_FIELDS,
     pagination: { limit, offset, total: all.length, has_more: nextOffset !== null, next },
     items
   } };
 }
 
-export function handleCollection(request, { defaultFormat = "json" } = {}) {
+export function handleCollection(request, { defaultFormat = "json", view } = {}) {
   if (request.method !== "GET" && request.method !== "HEAD") return new Response(null, { status: 405, headers: { ...COMMON_HEADERS, allow: "GET, HEAD", "cache-control": "no-store" } });
+  if (!view) return problem(503, "App view unavailable", "The generated app-local data/view.json is not available or has an invalid schema.");
   const format = chooseFormat(request, defaultFormat);
   if (format === "invalid") return problem(400, "Invalid format", "format must be json or xml.");
   if (format === "none") return problem(406, "Not acceptable", "Use Accept: application/json or application/xml.");
-  const built = buildPayload(request);
+  const built = buildPayload(request, view);
   if (built.error) return built.error;
-  const headers = { ...COMMON_HEADERS, etag: `W/\"${APP_ID}-${API_VERSION}-fixture-${built.payload.pagination.offset}-${built.payload.pagination.limit}\"`, "content-type": format === "xml" ? "application/xml; charset=utf-8" : "application/json; charset=utf-8" };
+  const headers = {
+    ...COMMON_HEADERS,
+    etag: 'W/"' + APP_ID + "-" + API_VERSION + "-" + view.generated_utc + "-" + built.payload.pagination.offset + "-" + built.payload.pagination.limit + '"',
+    "content-type": format === "xml" ? "application/xml; charset=utf-8" : "application/json; charset=utf-8"
+  };
   if (request.headers.get("if-none-match") === headers.etag) return new Response(null, { status: 304, headers });
   const body = format === "xml" ? asXml(built.payload) : JSON.stringify(built.payload, null, 2);
   return new Response(request.method === "HEAD" ? null : body, { status: 200, headers });
@@ -131,7 +127,8 @@ export async function onRoot(context) {
   const format = chooseFormat(context.request, "html");
   if (format === "html" || format === "none") return context.next();
   if (format === "invalid") return problem(400, "Invalid format", "format must be json or xml.");
-  return handleCollection(context.request, { defaultFormat: format });
+  const view = context.view || await loadView(context.request);
+  return handleCollection(context.request, { defaultFormat: format, view });
 }
 
 function rpcError(id, code, message, status = 400, data = undefined) {
@@ -143,8 +140,9 @@ function rpcResult(id, result, status = 200) {
   return new Response(JSON.stringify({ jsonrpc: "2.0", id, result }), { status, headers: { ...COMMON_HEADERS, "content-type": "application/json; charset=utf-8", "cache-control": "no-store" } });
 }
 
-export async function onMcp(request) {
+export async function onMcp(request, { view } = {}) {
   if (request.method !== "POST") return new Response(null, { status: 405, headers: { ...COMMON_HEADERS, allow: "POST", "cache-control": "no-store" } });
+  if (!view) return problem(503, "App view unavailable", "The generated app-local data/view.json is not available or has an invalid schema.");
   const url = new URL(request.url), origin = request.headers.get("origin");
   if (origin && origin !== url.origin) return problem(403, "Origin not allowed", "Cross-origin MCP requests are rejected.");
   const contentType = request.headers.get("content-type") || "";
@@ -174,16 +172,16 @@ export async function onMcp(request) {
   }
   if (!isModern && message.method === "initialize") {
     if (message.params?.protocolVersion !== LEGACY_MCP_VERSION) return rpcError(message.id, -32000, "Unsupported legacy protocol version", 400, { supported: [LEGACY_MCP_VERSION] });
-    return rpcResult(message.id, { protocolVersion: LEGACY_MCP_VERSION, capabilities: { resources: { subscribe: false, listChanged: false } }, serverInfo: { name: "cedwyn-tithe-h3-fixture", version: API_VERSION }, instructions: "Fixture-only preview. No live records or private data are available." });
+    return rpcResult(message.id, { protocolVersion: LEGACY_MCP_VERSION, capabilities: { resources: { subscribe: false, listChanged: false } }, serverInfo: { name: "cedwyn-tithe-h3", version: API_VERSION }, instructions: "The resource is the app-local Tithe H3 view, with public catalogue metadata and app-owned map data." });
   }
-  if (isModern && message.method === "server/discover") return rpcResult(message.id, { resultType: "complete", protocolVersion: MODERN_MCP_VERSION, capabilities: { resources: { listChanged: false } }, serverInfo: { name: "cedwyn-tithe-h3-fixture", version: API_VERSION }, ttlMs: 60000, cacheScope: "public", instructions: "Fixture-only preview. The resource contains synthetic data and is not connected to the live app dataset." });
-  if (message.method === "resources/list") return rpcResult(message.id, { ...(isModern ? { resultType: "complete", ttlMs: 60000, cacheScope: "public" } : {}), resources: [{ uri: RESOURCE_URI, name: "Tithe H3 synthetic catalogue fixture", title: "Tithe H3 synthetic catalogue fixture", description: "Synthetic API contract test data only; not a historical record or live catalogue projection.", mimeType: "application/json" }] });
+  if (isModern && message.method === "server/discover") return rpcResult(message.id, { resultType: "complete", protocolVersion: MODERN_MCP_VERSION, capabilities: { resources: { listChanged: false } }, serverInfo: { name: "cedwyn-tithe-h3", version: API_VERSION }, ttlMs: 60000, cacheScope: "public", instructions: "Read the Tithe H3 app-local view. Central catalogue fields are read-only public projections; map data is app-owned." });
+  if (message.method === "resources/list") return rpcResult(message.id, { ...(isModern ? { resultType: "complete", ttlMs: 60000, cacheScope: "public" } : {}), resources: [{ uri: RESOURCE_URI, name: "Tithe H3 public catalogue view", title: "Tithe H3 public catalogue view", description: "The app-local view of public central-catalogue records referenced by the Tithe H3 map.", mimeType: "application/json" }] });
   if (message.method === "resources/read") {
     if (message.params?.uri !== RESOURCE_URI) return rpcError(message.id, -32602, "Unknown resource URI", 404);
-    const payload = buildPayload(new Request("https://fixture.invalid/api/v1"));
+    const payload = buildPayload(new Request("https://view.invalid/api/v1"), view);
     return rpcResult(message.id, { ...(isModern ? { resultType: "complete", ttlMs: 60000, cacheScope: "public" } : {}), contents: [{ uri: RESOURCE_URI, mimeType: "application/json", text: JSON.stringify(payload.payload) }] });
   }
   return rpcError(message.id, -32601, "Method not found", 404);
 }
 
-export const contractInternals = Object.freeze({ APP_ID, API_VERSION, RESOURCE_URI, MODERN_MCP_VERSION, LEGACY_MCP_VERSION, PUBLIC_FIELDS, FIXTURE_COUNT: FIXTURE_ROWS.length });
+export const contractInternals = Object.freeze({ APP_ID, API_VERSION, RESOURCE_URI, MODERN_MCP_VERSION, LEGACY_MCP_VERSION, PUBLIC_FIELDS });
