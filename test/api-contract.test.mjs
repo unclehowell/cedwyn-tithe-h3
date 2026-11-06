@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import { handleCollection, onMcp, onRoot, contractInternals } from "../functions/_shared/api.mjs";
 
 const ORIGIN = "https://preview.example.test";
@@ -19,6 +20,7 @@ const view = {
   },
   map: { pins: { records: [{}, {}, {}] } }
 };
+const liveView = JSON.parse(await readFile(new URL("../data/view.json", import.meta.url), "utf8"));
 const modernMeta = { "io.modelcontextprotocol/protocolVersion": "2026-07-28", "io.modelcontextprotocol/clientInfo": { name: "contract-test", version: "1.0.0" }, "io.modelcontextprotocol/clientCapabilities": {} };
 
 function get(path = "/api/v1", headers = {}) { return new Request(ORIGIN + path, { method: "GET", headers }); }
@@ -110,3 +112,19 @@ test("API version and public field contract are explicit", () => {
   assert.equal(contractInternals.API_VERSION, "0.2.0");
   assert.deepEqual(contractInternals.PUBLIC_FIELDS, ["id", "kind", "title", "date_display", "date_sort", "status", "page", "source"]);
 });
+
+test("checked-in view.json is the single app-local database contract", async () => {
+  assert.equal(liveView.schema, "cedwyn.app-view/v1");
+  assert.equal(liveView.app.id, "tithe-h3");
+  assert.equal(liveView.map.pins.records.length, 65);
+  assert.ok(liveView.catalogue.count > 0);
+  for (const row of Object.values(liveView.catalogue.items)) {
+    assert.deepEqual(Object.keys(row).sort(), ["date_display", "date_sort", "id", "kind", "page", "status", "title"].sort());
+  }
+  const response = await handleCollection(get("/api/v1?limit=50"), { view: liveView });
+  const payload = await json(response);
+  assert.equal(payload.dataset.mode, "app-view");
+  assert.equal(payload.pagination.total, liveView.catalogue.count);
+  assert.ok(payload.items.every(item => item.source.type === "central-catalogue"));
+});
+
