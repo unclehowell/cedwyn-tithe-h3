@@ -1,5 +1,6 @@
-import { handleCollection } from "../_shared/api.mjs";
+import { handleCollection, loadView } from "../_shared/api.mjs";
 
 export async function onRequest(context) {
-  return handleCollection(context.request, { defaultFormat: "json" });
+  const view = await loadView(context.request);
+  return handleCollection(context.request, { view });
 }
