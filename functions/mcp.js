@@ -1,5 +1,6 @@
-import { onMcp } from "./_shared/api.mjs";
+import { onMcp, loadView } from "./_shared/api.mjs";
 
 export async function onRequest(context) {
-  return onMcp(context.request);
+  const view = await loadView(context.request);
+  return onMcp(context.request, { view });
 }
