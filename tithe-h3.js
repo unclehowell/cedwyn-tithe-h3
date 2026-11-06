@@ -48,7 +48,7 @@ function tl(p){var n=String(p.no);
 function col(p){return tlOn?TLC[tl(p)]:occCol(p);}
 var LECK={lat:51.45887,lon:-3.20240};
 var map=L.map("map",{zoomControl:true,attributionControl:true,maxZoom:21}).setView([51.4545,-3.2015],15);
-var osm=L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{subdomains:"abc",maxNativeZoom:19,maxZoom:21,attribution:"© OpenStreetMap contributors"}).addTo(map);
+var osm=L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxNativeZoom:19,maxZoom:21,referrerPolicy:"strict-origin-when-cross-origin",attribution:"© OpenStreetMap contributors"}).addTo(map);
 var os6=L.tileLayer("https://mapseries-tilesets.s3.amazonaws.com/os/6inchsecond/{z}/{x}/{y}.png",{maxNativeZoom:17,maxZoom:21,attribution:"OS six-inch c.1900, National Library of Scotland"});
 var D,tithe,stew,outl=L.layerGroup().addTo(map),hexL=L.layerGroup().addTo(map),hexR=L.canvas({padding:0.2}),res=12,sel=null;
 /* v0.6.0: parcel shapes come from data/parcels-est.json, a gap-free, non-overlapping reconstruction of the estate (boundaries between
