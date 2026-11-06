@@ -13,7 +13,27 @@ concurrency:
   group: preview-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 jobs:
+  contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Syntax checks
+        run: |
+          node --check functions/_shared/api.mjs
+          node --check functions/index.js
+          node --check functions/api/v1.js
+          node --check functions/mcp.js
+          python3 -m py_compile tools/sync_central.py
+      - name: View schema and API contract
+        run: |
+          python3 -c "import json; v=json.load(open('data/view.json')); assert v['schema']=='cedwyn.app-view/v1'; assert v['app']['id']=='tithe-h3'; assert v['catalogue']['count']==len(v['catalogue']['items']); assert len(v['map']['pins']['records'])>0"
+          node --test test/api-contract.test.mjs
   preview:
+    needs: contract
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
