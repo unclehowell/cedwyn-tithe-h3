@@ -66,10 +66,15 @@ jobs:
           assert v['catalogue']['count']==len(v['catalogue']['items'])
           assert len(v['map']['pins']['records'])>0
           PY
+          curl --fail --silent --show-error -H 'Accept: text/html' "$PREVIEW_URL/" -o /tmp/root.html
+          curl --fail --silent --show-error -H 'Accept: application/json' "$PREVIEW_URL/?format=json" -o /tmp/root.json
           curl --fail --silent --show-error -H 'Accept: application/json' "$PREVIEW_URL/api/v1" -o /tmp/api.json
           curl --fail --silent --show-error -H 'Accept: application/xml' "$PREVIEW_URL/api/v1?format=xml" -o /tmp/api.xml
           python3 - <<'PY'
           import json
+          assert '<html' in open('/tmp/root.html').read().lower()
+          root=json.load(open('/tmp/root.json'))
+          assert root['dataset']['mode']=='app-view'
           p=json.load(open('/tmp/api.json'))
           assert p['dataset']['mode']=='app-view'
           assert p['items'] and p['pagination']['total']>0
