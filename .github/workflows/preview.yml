@@ -44,7 +44,7 @@ jobs:
           BRANCH: ${{ github.head_ref }}
         run: |
           set -euo pipefail
-          SLUG="$(printf '%s' "$BRANCH" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9-]/-/g' | cut -c1-28)"
+          SLUG="$(printf '%s' "$BRANCH" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9-]/-/g' | cut -c1-28 | sed 's/-$//')"
           URL="https://${SLUG}.cedwyn-tithe-h3.pages.dev"
           echo "Testing $URL"
           for attempt in $(seq 1 30); do
