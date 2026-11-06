@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.6.1 (6 Nov 2026)
+- Record IDs in the dated-record pop-ups link to their catalogue pages (title on hover). They come from the map's own data store, `data/central.json`: only id, kind, title, date, status and page for the IDs in `data/pins.json`, pulled read-only from the central catalogue by `tools/sync_central.py` every 6 hours (`.github/workflows/sync-central.yml`). An ID the central catalogue does not hold yet stays plain text.
+
 ## v0.6.0 (5 Nov 2026)
 - OS c.1900 overlay stays visible at every zoom: its tiles exist to zoom 17 only, so they are now enlarged past 17 (maxNativeZoom 17) instead of going blank at 18 and above.
 - Hexagons follow the zoom, never below resolution 12: 12 up to zoom 16, 13 at zoom 17, 14 at 18 and 19, 15 from 20 (stepping back one where the view would pass the cell cap). "Lock resolution" (or picking a resolution) holds one resolution at every zoom. Resolutions 8, 10 and 11 leave the picker.

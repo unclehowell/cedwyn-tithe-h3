@@ -55,11 +55,14 @@ var D,tithe,stew,outl=L.layerGroup().addTo(map),hexL=L.layerGroup().addTo(map),h
    parcels estimated from the traced outlines; method in that file). The outlines as drawn stay in parcels.json and on the
    "Traced outlines" layer. Pins (Bute / Williams / Other, from the 1841 apportionment as entered) and dated-record markers come from
    data/pins.json; the later Land Registry layer from data/registry-parcels.geojson (empty until registry plans are held). - Cedwyn editors */
-var EST=null,PINS=null,LR=null,trL=L.layerGroup(),lrL=L.layerGroup(),pinL={bute:L.layerGroup().addTo(map),williams:L.layerGroup().addTo(map),other:L.layerGroup().addTo(map)},recL=L.layerGroup();
+var EST=null,PINS=null,LR=null,CEN=null,trL=L.layerGroup(),lrL=L.layerGroup(),pinL={bute:L.layerGroup().addTo(map),williams:L.layerGroup().addTo(map),other:L.layerGroup().addTo(map)},recL=L.layerGroup();
 var PC={bute:"#1f4fbf",williams:"#8e24aa",other:"#6d6d6d"},PW={bute:"Bute",williams:"Williams",other:"Other"};
+/* v0.6.1: record IDs link to their catalogue page, read from this webapp's own data store data/central.json (synced read-only
+   from the central catalogue by tools/sync_central.py). An ID the store does not hold stays plain text. - Cedwyn editors */
+function evl(i){var c=CEN&&CEN.items&&CEN.items[i];if(c&&c.page)return "<a href=\""+esc(c.page)+"\" title=\""+esc(c.title||"")+"\">"+esc(i)+"</a>";return c&&c.title?"<span title=\""+esc(c.title)+"\">"+esc(i)+"</span>":esc(i);}
 function gj(u){return fetch(u).then(function(r){return r.ok?r.json():null;}).catch(function(){return null;});}
-Promise.all([gj("data/parcels.json?v=0.6.0"),gj("data/parcels-est.json?v=0.6.0"),gj("data/pins.json?v=0.6.0"),gj("data/registry-parcels.geojson?v=0.6.0")]).then(function(a){
- D=a[0];EST=a[1];PINS=a[2];LR=a[3];if(!D)return;
+Promise.all([gj("data/parcels.json?v=0.6.0"),gj("data/parcels-est.json?v=0.6.0"),gj("data/pins.json?v=0.6.0"),gj("data/registry-parcels.geojson?v=0.6.0"),gj("data/central.json?v=0.6.1")]).then(function(a){
+ D=a[0];EST=a[1];PINS=a[2];LR=a[3];CEN=a[4];if(!D)return;
  D.parcels.forEach(function(p,i){p.tpoly=p.poly;var e=EST&&EST.parcels&&EST.parcels[i];
   if(e&&e.no===p.no&&e.poly&&e.poly.length){p.poly=e.poly.length===1?e.poly[0]:e.poly;p.est=e;}
   p.rings=[];(p.est?p.est.poly:[p.tpoly]).forEach(function(pg){pg.forEach(function(r){p.rings.push(r);});});});
@@ -188,7 +191,7 @@ function drawPins(){if(!PINS)return;["bute","williams","other"].forEach(function
   var top=cn.williams>=cn.bute&&cn.williams>=cn.other?"williams":(cn.bute>=cn.other?"bute":"other");
   g.sort(function(a,b){return String(a.year).localeCompare(String(b.year));});
   var h="<b>Dated records here: "+g.length+"</b><br><small>Placed at "+esc(g[0].placed_at)+".</small><ol class=\"th3-recs\">";
-  g.forEach(function(r){h+="<li><i class=\"th3-sw\" style=\"background:"+PC[r.cls]+"\"></i><b>"+esc(r.date||r.year)+"</b> · "+esc(r.event)+(r.parties?" · "+esc(r.parties):"")+(r.record?" <i>("+esc(r.record)+")</i>":"")+(r.evidence&&r.evidence.length?"<br><small>Evidence: "+esc(r.evidence.join(", "))+"</small>":"")+"</li>";});
+  g.forEach(function(r){h+="<li><i class=\"th3-sw\" style=\"background:"+PC[r.cls]+"\"></i><b>"+esc(r.date||r.year)+"</b> · "+esc(r.event)+(r.parties?" · "+esc(r.parties):"")+(r.record?" <i>("+esc(r.record)+")</i>":"")+(r.evidence&&r.evidence.length?"<br><small>Evidence: "+r.evidence.map(evl).join(", ")+"</small>":"")+"</li>";});
   h+="</ol>";var ll=k.split(",");L.marker([+ll[0],+ll[1]],{icon:diaIcon(PC[top],g.length),title:"Dated records: "+g.length}).bindPopup(h,{maxWidth:300,maxHeight:320}).addTo(recL);});}
 function tog(id,ly){var e=document.getElementById(id);if(!e)return;e.addEventListener("change",function(){e.checked?ly.addTo(map):map.removeLayer(ly);});}
 tog("l-tr",trL);tog("l-pb",pinL.bute);tog("l-pw",pinL.williams);tog("l-po",pinL.other);tog("l-pr",recL);
