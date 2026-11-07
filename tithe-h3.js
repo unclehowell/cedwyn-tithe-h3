@@ -57,12 +57,12 @@ var D,tithe,stew,outl=L.layerGroup().addTo(map),hexL=L.layerGroup().addTo(map),h
    data/pins.json; the later Land Registry layer from data/registry-parcels.geojson (empty until registry plans are held). - Cedwyn editors */
 var EST=null,PINS=null,LR=null,CEN=null,trL=L.layerGroup(),lrL=L.layerGroup(),pinL={bute:L.layerGroup().addTo(map),williams:L.layerGroup().addTo(map),other:L.layerGroup().addTo(map)},recL=L.layerGroup();
 var PC={bute:"#1f4fbf",williams:"#8e24aa",other:"#6d6d6d"},PW={bute:"Bute",williams:"Williams",other:"Other"};
-/* v0.6.1: record IDs link to their catalogue page, read from this webapp's own data store data/central.json (synced read-only
-   from the central catalogue by tools/sync_central.py). An ID the store does not hold stays plain text. - Cedwyn editors */
+/* v0.6.2: app data comes from the single generated data/view.json view (app-local map pins + seven public central-catalogue fields).
+   tools/sync_central.py rebuilds it read-only from the central public catalogue; geometry remains in app-owned static assets. - Cedwyn editors */
 function evl(i){var c=CEN&&CEN.items&&CEN.items[i];if(c&&c.page)return "<a href=\""+esc(c.page)+"\" title=\""+esc(c.title||"")+"\">"+esc(i)+"</a>";return c&&c.title?"<span title=\""+esc(c.title)+"\">"+esc(i)+"</span>":esc(i);}
 function gj(u){return fetch(u).then(function(r){return r.ok?r.json():null;}).catch(function(){return null;});}
-Promise.all([gj("data/parcels.json?v=0.6.0"),gj("data/parcels-est.json?v=0.6.0"),gj("data/pins.json?v=0.6.0"),gj("data/registry-parcels.geojson?v=0.6.0"),gj("data/central.json?v=0.6.1")]).then(function(a){
- D=a[0];EST=a[1];PINS=a[2];LR=a[3];CEN=a[4];if(!D)return;
+Promise.all([gj("data/parcels.json?v=0.6.2"),gj("data/parcels-est.json?v=0.6.2"),gj("data/registry-parcels.geojson?v=0.6.2"),gj("data/view.json?v=0.6.2")]).then(function(a){
+ D=a[0];EST=a[1];LR=a[2];var VIEW=a[3];PINS=VIEW&&VIEW.map&&VIEW.map.pins;CEN=VIEW&&VIEW.catalogue;if(!D||!PINS||!CEN)return;
  D.parcels.forEach(function(p,i){p.tpoly=p.poly;var e=EST&&EST.parcels&&EST.parcels[i];
   if(e&&e.no===p.no&&e.poly&&e.poly.length){p.poly=e.poly.length===1?e.poly[0]:e.poly;p.est=e;}
   p.rings=[];(p.est?p.est.poly:[p.tpoly]).forEach(function(pg){pg.forEach(function(r){p.rings.push(r);});});});

@@ -14,13 +14,12 @@ git clone --depth 1 https://github.com/unclehowell/cedwyn-tithe-h3.git
 
 ## Where to send changes (read this first)
 
-`split-repos.json` on `unclehowell/cedwyn` main sets the mode:
+The current `split-repos.json` row on `unclehowell/cedwyn` main is authoritative. At the time of this update, Tithe H3 is **`mode: split-repo` with `deploy: repo`**:
 
-- **mirror** (now): the old branch `section/tithe-h3` on unclehowell/cedwyn is still the source. `mirror.yml` here copies it every
-  30 minutes. Send pull requests to `section/tithe-h3` on unclehowell/cedwyn (clone it with
-  `git clone --depth 1 --single-branch --branch section/tithe-h3 --filter=blob:none https://github.com/unclehowell/cedwyn.git`).
-- **split-repo** (after the owner switches it): this repository is the source; send pull requests here.
-  unclehowell/cedwyn copies `main` back into `section/tithe-h3`, so the live page and every old path keep working.
+- This repository's `main` is the app source of truth. Make app changes here and open pull requests against this repository.
+- The old `section/tithe-h3` branch in `unclehowell/cedwyn` is retained as a compatibility/build mirror; do not send new app changes to it. The central sync workflow may copy this repository's source back to the old branch so legacy paths and consumers continue to work.
+- `deploy: repo` enables the central assembler to fetch this repository as its source. It does **not**, by itself, prove the public `/tithe-h3/` production route is served independently from this repository. Production route verification remains a separate acceptance check.
+- `mirror.yml` is retained only for the pre-switch mirror mode. Do not use it as the source-of-truth instruction while the central registry says `split-repo`.
 
 `SPLIT.json` records the source commit of the last copy. The app's own notes, if the branch had any, are in `APP-README.md`.
 

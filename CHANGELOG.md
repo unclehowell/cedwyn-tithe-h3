@@ -7,7 +7,7 @@
 - OpenStreetMap base layer: tile images now send the page's origin as the referrer (`referrerPolicy: strict-origin-when-cross-origin`), because the site-wide `Referrer-Policy: no-referrer` header stripped it and the OpenStreetMap tile servers refuse tile requests with no referrer; the single `tile.openstreetmap.org` host replaces the deprecated `a/b/c` subdomains. The OS six-inch layer is unchanged. Issue #5.
 
 ## v0.6.1 (6 Nov 2026)
-- Record IDs in the dated-record pop-ups link to their catalogue pages (title on hover). They come from the map's own data store, `data/central.json`: only id, kind, title, date, status and page for the IDs in `data/pins.json`, pulled read-only from the central catalogue by `tools/sync_central.py` every 6 hours (`.github/workflows/sync-central.yml`). An ID the central catalogue does not hold yet stays plain text.
+- Record IDs in the dated-record pop-ups link to their catalogue pages (title on hover). They come from the map's own data store, `data/view.json`: app-owned map pins plus only id, kind, title, date_display, date_sort, status and page for the referenced IDs, pulled read-only from the central public catalogue by `tools/sync_central.py` every 6 hours and on pin-data changes (`.github/workflows/sync-central.yml`). An ID the central catalogue does not hold yet stays plain text.
 
 ## v0.6.0 (5 Nov 2026)
 - OS c.1900 overlay stays visible at every zoom: its tiles exist to zoom 17 only, so they are now enlarged past 17 (maxNativeZoom 17) instead of going blank at 18 and above.
