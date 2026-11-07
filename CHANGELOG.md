@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.6.3 (7 Nov 2026)
+- Street-map tiles on the live page. The site build keeps a map-tile address only when it starts with a template in `allowed_tile_templates` (unclehowell/cedwyn `themes.json`: `https://{s}.tile.openstreetmap.org/`); the bare `https://tile.openstreetmap.org/` form of v0.6.2 is not listed, so the build rewrote it into a `/wayback/go/?u=` link and the browser blocked every tile (ERR_BLOCKED_BY_ORB, checked 7 Nov 16:30Z at 390 px). The OSM layer is back on the `{s}` form (`subdomains: "abc"`) and keeps `referrerPolicy: strict-origin-when-cross-origin`. Footer and changelog table brought up to date (they still read v0.6.1). Issue #5.
+
 ## v0.6.2 (6 Nov 2026)
 - OpenStreetMap base layer: tile images now send the page's origin as the referrer (`referrerPolicy: strict-origin-when-cross-origin`), because the site-wide `Referrer-Policy: no-referrer` header stripped it and the OpenStreetMap tile servers refuse tile requests with no referrer; the single `tile.openstreetmap.org` host replaces the deprecated `a/b/c` subdomains. The OS six-inch layer is unchanged. Issue #5.
 
