@@ -10,24 +10,9 @@
   "status",
   "page"
  ],
- "synced_utc": "2026-11-06T09:14:19Z",
- "count": 45,
- "not_in_central": [
-  "EV-0263",
-  "EV-0265",
-  "EV-0276",
-  "EV-0288",
-  "EV-0609",
-  "EV-0613",
-  "EV-0614",
-  "EV-0616",
-  "EV-0618",
-  "EV-0619",
-  "EV-0620",
-  "EV-0621",
-  "EV-0624",
-  "EV-0625"
- ],
+ "synced_utc": "2026-11-08T06:08:05Z",
+ "count": 59,
+ "not_in_central": [],
  "items": {
   "EV-0006": {
    "id": "EV-0006",
@@ -433,6 +418,132 @@
    "date_sort": "1940",
    "status": "HELD (public online copy)",
    "page": "/research/evidence/ev-0220-leckwith-woods-wgr-gift-1940-1942/"
+  },
+  "EV-0263": {
+   "id": "EV-0263",
+   "kind": "evidence",
+   "title": "Commons Registration Act 1965 s.5 and SI 1968/989: registrations were publicised by public notice only; Glamorgan County Council’s London Gazette notices of 22 October 1968 and 24 October 1969; second objection period for VG41 ran 1 May 1970 – 31 July 1972",
+   "date_display": "1968–1972 (objection period ended 31 July 1972)",
+   "date_sort": "1972-07-31",
+   "status": "HELD (texts read 19 Oct 2026); the 1970 Glamorgan second-period notice listing VG41 NOT FOUND (Gazette OCR)",
+   "page": "https://research.bucklerfamily.estate/evidence/ev-0263-commons-registration-1965-publicity-glamorgan-notices-vg41/"
+  },
+  "EV-0265": {
+   "id": "EV-0265",
+   "kind": "evidence",
+   "title": "Registration background: compulsory registration of title began in the Vale of Glamorgan on 1 December 1975 (SI 1975/160); the solicitor’s certificate on first registration (LRR 1925 r.29; 1989 text); the HMLR “about to be registered” Gazette notices ran only to about May 1975",
+   "date_display": "1 December 1975 (compulsory registration)",
+   "date_sort": "1975-12-01",
+   "status": "HELD (texts read 16–19 Oct 2026); the 1983 Form 1C and r.29 wording as used in Feb 1983 NOT SEEN",
+   "page": "https://research.bucklerfamily.estate/evidence/ev-0265-hmlr-registration-background-compulsory-1975-r29-certificate/"
+  },
+  "EV-0276": {
+   "id": "EV-0276",
+   "kind": "evidence",
+   "title": "Press set, 1994–1996: Ideal Homes (Wales) built “Churchview Close”, Llandough (first buyers by January 1995); Persimmon bought Ideal Homes in early 1996 and sold the last house there by September 1996 (snippets)",
+   "date_display": "1994 – September 1996",
+   "date_sort": "1996-09",
+   "status": "SOURCE PENDING (snippets only)",
+   "page": "https://research.bucklerfamily.estate/evidence/ev-0276-churchview-close-llandough-ideal-homes-persimmon-1994-1996/"
+  },
+  "EV-0288": {
+   "id": "EV-0288",
+   "kind": "evidence",
+   "title": "Press search snippets, Nov 1968 – Feb 1969: Amalgamated Investment & Property bids for Western Ground Rents (Nov 1968); a counter-bid (Jan 1969); the WGR board favours Great Portland Estates (8 Feb 1969); British Petroleum makes an agreed cash bid of 17s a share, about £18–19 million, on 15 Feb 1969, to pass WGR’s properties “on to the” BP pension fund; Amalgamated’s offer lapses (18 Feb 1969)",
+   "date_display": "19 November 1968 – 18 February 1969",
+   "date_sort": "1968-11-19",
+   "status": "SOURCE PENDING (snippets read 21 Oct 2026)",
+   "page": "https://research.bucklerfamily.estate/evidence/ev-0288-snippets-only-press-on-the-1968-69-takeover-battle-for-western-ground-rents-ltd-en/"
+  },
+  "EV-0609": {
+   "id": "EV-0609",
+   "kind": "evidence",
+   "title": "Parcel-by-parcel table: 21 takings of Cedwyn / Tŷ Mawr land, with the event before each and its gap (analysis, 25 Oct 2026)",
+   "date_display": "25 October 2026",
+   "date_sort": "2026-10-25",
+   "status": "PUBLISHED — ingredients only.",
+   "page": "https://cedwyn.bucklerfamily.estate/research/evidence/ev-0609-parcel-by-parcel-pattern-table-2026/"
+  },
+  "EV-0613": {
+   "id": "EV-0613",
+   "kind": "evidence",
+   "title": "Bute Glamorgan manorial records: court books to 1937, extinguishment of manorial incidents 1929–40, Ministry of Agriculture correspondence 1938, steward for the \"Glamorgan manors of Mountjoy Ltd\" 1937 (Glamorgan Archives DB/M/1–21)",
+   "date_display": "1926–1940",
+   "date_sort": "1926",
+   "status": "PENDING — view free at Glamorgan Archives.",
+   "page": "https://cedwyn.bucklerfamily.estate/research/evidence/ev-0613-bute-glamorgan-manorial-records-1926-1940/"
+  },
+  "EV-0614": {
+   "id": "EV-0614",
+   "kind": "evidence",
+   "title": "Mountjoy Ltd in the Bute estate catalogue: \"In 1926, the remaining Bute property was incorporated under a private family company called Mountjoy Ltd\" (TNA Discovery, GB 0214 DB administrative history)",
+   "date_display": "1926 per the catalogue (company formed May 1922, EV-0624); 1938 sale",
+   "date_sort": "1922-05",
+   "status": "READ (catalogue text); company records not yet seen.",
+   "page": "https://cedwyn.bucklerfamily.estate/research/evidence/ev-0614-mountjoy-ltd-1926-tna-catalogue/"
+  },
+  "EV-0616": {
+   "id": "EV-0616",
+   "kind": "evidence",
+   "title": "Law of Property Act 1922, ss.128 and 138: all copyhold enfranchised into freehold from 1 January 1926; manorial incidents to be extinguished within ten years",
+   "date_display": "1 January 1926",
+   "date_sort": "1926-01-01",
+   "status": "READ.",
+   "page": "https://cedwyn.bucklerfamily.estate/research/evidence/ev-0616-law-of-property-act-1922-copyhold-1926/"
+  },
+  "EV-0618": {
+   "id": "EV-0618",
+   "kind": "evidence",
+   "title": "Press, 1904–05: Cardiff’s Western Sewer Sub-committee completes the conveyance of the pumping-station site and sewer easements from the representatives of Lord Bute (Evening Express 23 Mar 1905; Weekly Mail 11 Jun 1904)",
+   "date_display": "11 June 1904; 23 March 1905",
+   "date_sort": "1904-06-11",
+   "status": "READ (newspaper text). The deed itself is not yet copied.",
+   "page": "https://cedwyn.bucklerfamily.estate/research/evidence/ev-0618-cardiff-western-sewer-bute-easements-1904-1905/"
+  },
+  "EV-0619": {
+   "id": "EV-0619",
+   "kind": "evidence",
+   "title": "Covenant wording: Western Ground Rents’ Llandough covenant of 5 March 1962 and BP’s covenant of 23 May 1975, side by side",
+   "date_display": "5 March 1962; 23 May 1975",
+   "date_sort": "1962-03-05",
+   "status": "READ (register view and FOI copy).",
+   "page": "https://cedwyn.bucklerfamily.estate/research/evidence/ev-0619-wgr-1962-covenant-and-bp-1975-covenant/"
+  },
+  "EV-0620": {
+   "id": "EV-0620",
+   "kind": "evidence",
+   "title": "23 May 1975: conveyance of the farmhouse plot and other land, BP Pension Trust to BP Properties; the rest kept as \"Retained Land\"",
+   "date_display": "23 May 1975",
+   "date_sort": "1975-05-23",
+   "status": "PENDING — the deed is on the HM Land Registry file.",
+   "page": "https://cedwyn.bucklerfamily.estate/research/evidence/ev-0620-bp-pension-trust-to-bp-properties-1975/"
+  },
+  "EV-0621": {
+   "id": "EV-0621",
+   "kind": "evidence",
+   "title": "Root of title: the 25 December 1938 conveyance, and why the 31 December 1969 sale fell under the 30-year rule (LPA 1925 s.44(1); LPA 1969 ss.23, 31(2))",
+   "date_display": "25 December 1938; 31 December 1969",
+   "date_sort": "1938-12-25",
+   "status": "READ.",
+   "page": "https://cedwyn.bucklerfamily.estate/research/evidence/ev-0621-root-of-title-1938-and-the-1969-sale/"
+  },
+  "EV-0624": {
+   "id": "EV-0624",
+   "kind": "evidence",
+   "title": "Mountjoy Ltd formed in May 1922 as the 4th Marquess of Bute’s estate company (£1,000,000; named after his title Viscount Mountjoy); lord of Llandough court leet in 1932",
+   "date_display": "12–13 May 1922; 7 Oct 1932",
+   "date_sort": "1922-05-13",
+   "status": "READ (search-result text).",
+   "page": "https://cedwyn.bucklerfamily.estate/research/evidence/ev-0624-mountjoy-ltd-formed-1922-bute-estate-company/"
+  },
+  "EV-0625": {
+   "id": "EV-0625",
+   "kind": "evidence",
+   "title": "The 1938 sale as one transaction: contracts 17 May 1938, Western Ground Rents registered 4–5 July 1938, manors kept back, Mountjoy as mortgagee to 1944",
+   "date_display": "17 May – 23/25 Dec 1938; 14 Jun 1939",
+   "date_sort": "1938-12-25",
+   "status": "READ (search-result text and catalogue entries).",
+   "page": "https://cedwyn.bucklerfamily.estate/research/evidence/ev-0625-bute-mountjoy-sale-to-wgr-1938-one-transaction/"
   }
  }
 }
