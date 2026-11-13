@@ -74,4 +74,4 @@ jobs:
           git push origin HEAD:main
       - name: Skip — dedicated repo is authoritative
         if: steps.mode.outputs.should_mirror != 'true'
-        run: '"No mirror: dedicated repository remains authoritative."'
+        run: 'echo "No mirror: dedicated repository remains authoritative."'
