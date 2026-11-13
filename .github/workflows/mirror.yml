@@ -1,9 +1,7 @@
 name: mirror-from-cedwyn
-# While split-repos.json on unclehowell/bucklerfamily-estate main lists this repository with "mode": "mirror", the old branch
-# `section/tithe-h3` on unclehowell/bucklerfamily-estate stays the source: this job copies its files here every 30 minutes (one branch,
-# depth 1, no other refs). When the owner switches the mode to "split-repo", this job stops and this repository
-# becomes the source (cedwyn's sync-split-repos.yml then copies it back into the old branch). Never force-pushes.
-# - Sion's Tab agent
+# This workflow is only for apps whose authoritative split manifest says mode: mirror.
+# The manifest lives in unclehowell/cedwyn/main. A missing/unreadable manifest fails closed:
+# never assume mirror mode, because that could overwrite this repository's main branch.
 on:
   schedule:
     - cron: '*/30 * * * *'
@@ -20,28 +18,60 @@ jobs:
   mirror:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    env:
-      NAME: cedwyn-tithe-h3
-      SRC_BRANCH: section/tithe-h3
     steps:
-      - name: Mode check
+      - name: Read authoritative split manifest
         id: mode
+        shell: bash
         run: |
-          MODE=$(curl -fsSL "https://raw.githubusercontent.com/unclehowell/bucklerfamily-estate/main/split-repos.json?cb=$(date +%s)" 2>/dev/null \
-            | python3 -c "import json,sys,os; d=json.load(sys.stdin); print(next((a.get('mode','mirror') for a in d.get('apps',[]) if a.get('repo','').endswith('/'+os.environ['NAME'])),'mirror'))" 2>/dev/null || echo mirror)
-          echo "mode=$MODE" >> "$GITHUB_OUTPUT"; echo "mode: $MODE"
+          set -euo pipefail
+          curl --fail --silent --show-error \
+            "https://raw.githubusercontent.com/unclehowell/cedwyn/main/split-repos.json?cb=$(date +%s)" \
+            -o /tmp/split-repos.json
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          from pathlib import Path
+          d = json.loads(Path("/tmp/split-repos.json").read_text())
+          matches = [a for a in d.get("apps", []) if a.get("repo") == "unclehowell/cedwyn-tithe-h3"]
+          if len(matches) != 1:
+              raise SystemExit(f"expected exactly one manifest entry; found {len(matches)}")
+          app = matches[0]
+          mode = app.get("mode")
+          branch = app.get("old_branch")
+          deploy = app.get("deploy")
+          if mode not in ("mirror", "split-repo"):
+              raise SystemExit(f"missing or unknown mode: {mode!r}")
+          if not branch:
+              raise SystemExit("manifest entry has no old_branch")
+          print(f"mode={mode}")
+          print(f"old_branch={branch}")
+          print(f"should_mirror={'true' if mode == 'mirror' and deploy != 'repo' else 'false'}")
+          PY
+          echo "Authoritative mode loaded."
       - uses: actions/checkout@v4
-        if: steps.mode.outputs.mode == 'mirror'
+        if: steps.mode.outputs.should_mirror == 'true'
         with: { ref: main, fetch-depth: 1 }
-      - name: Copy the old branch (one branch, shallow)
-        if: steps.mode.outputs.mode == 'mirror'
+      - name: Copy the authoritative legacy branch (mirror mode only)
+        if: steps.mode.outputs.should_mirror == 'true'
+        env:
+          SOURCE_REPO: unclehowell/cedwyn
+          SOURCE_BRANCH: ${{ steps.mode.outputs.old_branch }}
         run: |
-          git clone -q --depth 1 --single-branch --branch "$SRC_BRANCH" --filter=blob:none https://github.com/unclehowell/bucklerfamily-estate.git /tmp/src
+          set -euo pipefail
+          git clone -q --depth 1 --single-branch --branch "$SOURCE_BRANCH" \
+            "https://github.com/$SOURCE_REPO.git" /tmp/src
           SRC_SHA=$(git -C /tmp/src rev-parse HEAD)
           [ -f /tmp/src/README.md ] && cp /tmp/src/README.md APP-README.md || true
           rsync -a --delete --exclude .git --exclude .github --exclude README.md --exclude APP-README.md --exclude SPLIT.json /tmp/src/ ./
-          printf '{"source":"unclehowell/bucklerfamily-estate","branch":"%s","sha":"%s","copied_utc":"%s"}\n' "$SRC_BRANCH" "$SRC_SHA" "$(date -u +%FT%TZ)" > SPLIT.json
+          printf '{"source":"%s","branch":"%s","sha":"%s","copied_utc":"%s"}\n' \
+            "$SOURCE_REPO" "$SOURCE_BRANCH" "$SRC_SHA" "$(date -u +%FT%TZ)" > SPLIT.json
           git add -A
-          if git diff --cached --quiet -- . ':!SPLIT.json'; then echo "no change since $SRC_SHA"; exit 0; fi
-          git -c user.name="cedwyn-mirror" -c user.email="actions@users.noreply.github.com" commit -q -m "Mirror $SRC_BRANCH@${SRC_SHA:0:7} from unclehowell/bucklerfamily-estate"
+          if git diff --cached --quiet -- . ':!SPLIT.json'; then
+            echo "no change since $SOURCE_REPO/$SOURCE_BRANCH@$SRC_SHA"
+            exit 0
+          fi
+          git -c user.name="cedwyn-mirror" -c user.email="actions@users.noreply.github.com" \
+            commit -q -m "Mirror $SOURCE_BRANCH@${SRC_SHA:0:7} from $SOURCE_REPO"
           git push origin HEAD:main
+      - name: Skip — dedicated repo is authoritative
+        if: steps.mode.outputs.should_mirror != 'true'
+        run: echo "No mirror: dedicated repository remains authoritative."
