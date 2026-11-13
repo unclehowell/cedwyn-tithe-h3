@@ -14,15 +14,14 @@ git clone --depth 1 https://github.com/unclehowell/cedwyn-tithe-h3.git
 
 ## Where to send changes (read this first)
 
-`split-repos.json` on `unclehowell/cedwyn` main sets the mode:
+The authoritative `split-repos.json` in `unclehowell/cedwyn` lists this app as `mode: split-repo` and `deploy: repo`. **This repository's `main` branch is the app source of truth.**
 
-- **mirror** (now): the old branch `section/tithe-h3` on unclehowell/cedwyn is still the source. `mirror.yml` here copies it every
-  30 minutes. Send pull requests to `section/tithe-h3` on unclehowell/cedwyn (clone it with
-  `git clone --depth 1 --single-branch --branch section/tithe-h3 --filter=blob:none https://github.com/unclehowell/cedwyn.git`).
-- **split-repo** (after the owner switches it): this repository is the source; send pull requests here.
-  unclehowell/cedwyn copies `main` back into `section/tithe-h3`, so the live page and every old path keep working.
+1. Make app changes on a feature branch in this repository.
+2. Open the pull request into this repository's `main`.
+3. The estate build reads this repository directly for `deploy: repo` apps (see `tools/assemble.py` in `unclehowell/cedwyn`). It records the exact source commit and fails closed if the repository cannot be read.
+4. The retained `section/tithe-h3` branch in `unclehowell/cedwyn` is a legacy copy, not the app's development or deployment source. The central `sync-split-repos` workflow excludes `deploy: repo` apps, and the local mirror workflow below must run only when the authoritative manifest explicitly says `mode: mirror`.
 
-`SPLIT.json` records the source commit of the last copy. The app's own notes, if the branch had any, are in `APP-README.md`.
+`SPLIT.json` records the source commit from the initial split; it is historical provenance, not a live sync indicator.
 
 ## Previews
 
